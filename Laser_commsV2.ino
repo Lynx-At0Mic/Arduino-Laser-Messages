@@ -4,11 +4,11 @@ int midL; //mid point between highest and lowest light values to determin wether
 int dropThreshhold = 50; //minumin drop in light level to activate data reception
 const int laser = 10; //pin connected to laser diode
 const int photoR = A0; //pin connected to photoresistor
-const int delayT = 20; //delay for sending and reciving bits. increasing this increases bandwidth but decreases signal quality. must be the same on both receiver and transmitter
+const int delayT = 5; //delay for sending and reciving bits. increasing this increases bandwidth but decreases signal quality. must be the same on both receiver and transmitter. max i found to be stable is 5
 char recChar; //last char recieved
 byte recVal; //last byte recived
 int nullCount; //counts how many empty bit have been received in a row for ending reception
-char transmitData[255]; //Data to transmit. limit 255 bytes
+char transmitData[1000]; //Data to transmit. limit 1000 bytes by default. altering array size alters amount of memory used
 byte transmitByte; //next byte to transmit
 byte startCode = byte(204); //byte transmitted to tell receiver to get ready to receive data
 
@@ -27,7 +27,7 @@ void transmit(){
   while(Serial.available() == 0){ //wait for user to enter text
     
     }
-  Serial.readBytes(transmitData, 255); //read serial data for transmittion
+  Serial.readBytes(transmitData, 1000); //read serial data for transmittion
   
   digitalWrite(laser, HIGH); //turn laser on and off again to let receiver know strength of the laser
   delay(delayT);
@@ -50,7 +50,7 @@ void transmit(){
     delay(delayT);
   }
   
-  for(int a=0; a<255; a++){ //loop through bytes in transmitData[]
+  for(int a=0; a<1000; a++){ //loop through bytes in transmitData[]
     
     if(!transmitData[a]){ //if end of data stop sending
       Serial.println("Done");
@@ -88,7 +88,7 @@ void transmit(){
     delay(delayT*9);
   }
   
-  for(int i=0; i<255; i++){ //empty data variable
+  for(int i=0; i<1000; i++){ //empty data variable
 
     transmitData[i] = NULL;
   }
